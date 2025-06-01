@@ -1,0 +1,31 @@
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 0 5px orange;
+  list-style: none;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  margin-bottom: 0.5rem;
+}
+.task-buttons {
+  display: flex;
+  gap: 0.8rem;
+  margin-left: auto;
+  color: #333;
+}
+.fa-solid {
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: #333; /* Default color for icons */
+}
+.fa-solid:hover {
+  color: #ff6347; /* Tomato color on hover */
+}
+.todo-item input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+}

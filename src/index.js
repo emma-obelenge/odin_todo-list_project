@@ -1,22 +1,22 @@
-import "./styles/home.css";
+import renderTodoList from "./renderTodoList";
+import "./styles/index.css";
+import todoForm from "./todoForm";
 
-console.log("Welcome to Odin Restaurant!");
+let newTask = document.querySelector(".new-task-btn");
+let todoListContainer = document.querySelector(".todo-list");
 
-import loadHome from "./home";
-import loadAbout from "./about";
-import loadContact from "./contact";
-import loadMenu from "./menu";
-
-// loadHome();
-
-function init() {
-  document.querySelector(".logo").addEventListener("click", loadHome);
-  document.querySelector(".home-btn").addEventListener("click", loadHome);
-  document.querySelector(".menu-btn").addEventListener("click", loadMenu);
-  document.querySelector(".about-btn").addEventListener("click", loadAbout);
-  document.querySelector(".contact-btn").addEventListener("click", loadContact);
-
-  loadHome(); // Load home page by default
+let todoList = JSON.parse(localStorage.getItem("todoList"));
+if (!todoList || todoList.length === 0) {
+  // Initialize todoList if it doesn't exist or is empty
+  let emptyMessage = document.createElement("p");
+  emptyMessage.className = "empty-todo-message";
+  emptyMessage.textContent =
+    "No tasks available. Click 'New Task' to get started.";
+  todoListContainer.appendChild(emptyMessage);
+} else {
+  renderTodoList();
 }
 
-window.addEventListener("DOMContentLoaded", init);
+newTask.addEventListener("click", () => {
+  todoForm();
+});
