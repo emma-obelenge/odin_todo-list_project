@@ -3,3 +3,4 @@ dist/
 build/
 webpack.config.js
 package-lock.json
+autorun.sh

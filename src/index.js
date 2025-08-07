@@ -1,22 +1,14 @@
+import "./styles/dashboard.css";
+import "./styles/taskFormPopup.css";
+import initializeTodoList from "./initializeTodoList";
 import renderTodoList from "./renderTodoList";
-import "./styles/index.css";
-import todoForm from "./todoForm";
+import { dashboardEventListener } from "./eventListener";
+import loadSidebarAd from "./loadSidebarAd";
 
-let newTask = document.querySelector(".new-task-btn");
-let todoListContainer = document.querySelector(".todo-list");
+initializeTodoList();
+renderTodoList();
+loadSidebarAd(true);
 
-let todoList = JSON.parse(localStorage.getItem("todoList"));
-if (!todoList || todoList.length === 0) {
-  // Initialize todoList if it doesn't exist or is empty
-  let emptyMessage = document.createElement("p");
-  emptyMessage.className = "empty-todo-message";
-  emptyMessage.textContent =
-    "No tasks available. Click 'New Task' to get started.";
-  todoListContainer.appendChild(emptyMessage);
-} else {
-  renderTodoList();
-}
-
-newTask.addEventListener("click", () => {
-  todoForm();
-});
+// const mainContent = document.querySelector(".main-content");
+// const rightbar = document.querySelector(".rightbar");
+dashboardEventListener();

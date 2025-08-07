@@ -1,0 +1,440 @@
+:root {
+  --sidebar-width: 260px;
+  --rightbar-width: 320px;
+  --main-bg: #fafbfc;
+  --sidebar-bg: #fff;
+  --rightbar-bg: #fff;
+  --primary: #222;
+  --muted: #888;
+  --border: #eee;
+  --accent: #f5f5f5;
+  --tag1: #e3fcef;
+  --tag2: #ffe3e3;
+  --tag1-text: #1a7f37;
+  --tag2-text: #d7263d;
+  --yellow: #ffe066;
+  --yellow-text: #b8860b;
+  --btn: #ffd600;
+  --btn-text: #222;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+body {
+  background: var(--main-bg);
+  color: var(--primary);
+}
+.menu-bar {
+  display: block;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--muted);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.8rem;
+}
+header {
+  border-bottom: 2px solid #ccc;
+  height: 10vh;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 1rem;
+}
+header h1 {
+  background-color: rebeccapurple;
+  padding: 2px 10px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.dashboard {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr var(--rightbar-width);
+  grid-template-rows: auto 1fr;
+  width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  padding: 1rem 1rem 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.search-container {
+  border: 1px solid var(--border);
+  height: 2.3rem;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+}
+input[type="search"] {
+  width: 90%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  font-size: 1rem;
+  background: transparent;
+}
+input[type="search"]:focus {
+  outline: none;
+  border: none;
+}
+.search-container:focus-within {
+  border: 2px solid gray;
+  transition: border 0.2s;
+}
+.sidebar-title {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin: 24px 0 8px 0;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+  max-height: 14rem;
+  overflow-y: auto;
+}
+.sidebar ul li {
+  display: flex;
+  align-items: center;
+  padding: 7px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar ul li.active,
+.sidebar ul li:hover {
+  background: var(--accent);
+}
+.sidebar ul li .count {
+  background: var(--accent);
+  color: var(--muted);
+  font-size: 0.9em;
+  border-radius: 10px;
+  padding: 2px 8px;
+  margin-left: auto;
+}
+.sidebar .new-task-btn,
+.sidebar .new-list-btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  margin-top: 8px;
+  padding: 6px 0;
+}
+.fa-solid {
+  color: var(--muted);
+}
+.sidebar .new-task-btn:hover,
+.sidebar .new-list-btn:hover {
+  color: var(--primary);
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+.dot.personal {
+  background: #f06292;
+}
+.dot.work {
+  background: #64b5f6;
+}
+.dot {
+  background: #ffd600;
+}
+.sidebar .account {
+  margin-top: 2rem;
+}
+.sidebar .account li {
+  color: var(--muted);
+  font-size: 1rem;
+  padding: 7px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.account li:hover,
+.account li:hover .fa-solid {
+  background: var(--accent);
+  color: red;
+}
+.fa-gear,
+.fa-right-from-bracket {
+  color: var(--muted);
+}
+
+/* Main */
+.main {
+  flex: 1;
+  background: var(--main-bg);
+  padding: 32px 32px 0;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+}
+.main-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.main-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+.main-header .category-count {
+  font-size: 1.5rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.add-task-btn {
+  background: none;
+  border: none;
+  width: fit-content;
+  color: var(--muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-bottom: 18px;
+  text-align: left;
+  padding: 0;
+  transition: color 0.2s;
+}
+.add-task-btn:hover {
+  color: var(--primary);
+}
+.task-list {
+  background: var(--sidebar-bg);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  padding: 0;
+  margin: 0;
+  height: min(35rem, 90vh);
+  list-style: none;
+  overflow-y: auto;
+}
+.task-list li {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.task-list .dateAndTagContainer {
+  width: 14rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.task-list li:hover {
+  background: var(--accent);
+}
+.task-list li:last-child {
+  border-bottom: none;
+}
+.task-list li .checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  margin-right: 10px;
+  background: #fff;
+  vertical-align: middle;
+}
+/* .task-list li.completed {
+  color: var(--muted);
+  text-decoration: line-through;
+} */
+.task-list .task-title {
+  margin-right: auto;
+}
+.task-list .tag {
+  background: var(--tag2);
+  color: var(--tag2-text);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.95em;
+  font-weight: 500;
+  margin-right: auto;
+}
+.task-list .date {
+  font-size: 0.95em;
+  color: var(--yellow-text);
+  background: var(--yellow);
+  border-radius: 8px;
+  padding: 2px 8px;
+}
+.task-list .arrow {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 1.2em;
+}
+li .task-title {
+  width: fit-content;
+}
+
+/* Rightbar */
+.rightbar-container {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rightbar {
+  width: var(--rightbar-width);
+  background: var(--rightbar-bg);
+  border-left: 1px solid var(--border);
+  padding: 32px 24px 0 24px;
+  display: none; /* or flex*/
+  flex-direction: column;
+  position: relative;
+}
+.fa-xmark {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+.rightbar h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+.rightbar label {
+  font-size: 0.98rem;
+  color: var(--muted);
+  margin-top: 12px;
+  display: block;
+}
+.rightbar input,
+.rightbar select,
+.rightbar textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 1rem;
+  background: var(--accent);
+  margin-bottom: 12px;
+}
+.rightbar textarea {
+  height: 12rem;
+  resize: none;
+}
+.rightbar .actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.rightbar .rightbar-delete-btn {
+  background: #fff;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  padding: 5px 9px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s;
+}
+.rightbar .rightbar-delete-btn:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+.rightbar .rightbar-save-btn {
+  background: var(--btn);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.rightbar .rightbar-save-btn:hover {
+  background: #ffe066;
+}
+/* .rightbar-ad video {
+  border: 2px solid red;
+  width: 15rem;
+  height: 20rem;
+} */
+
+/* @media (max-width: 1100px) {
+  .dashboard {
+    flex-direction: column;
+  }
+  .sidebar,
+  .rightbar {
+    width: 100%;
+    min-height: unset;
+    border: none;
+  }
+  .main {
+    padding: 16px;
+  }
+}
+@media (max-width: 800px) {
+  .dashboard {
+    flex-direction: column;
+  }
+  .sidebar,
+  .rightbar {
+    width: 100%;
+    min-height: unset;
+    border: none;
+  }
+  .main {
+    padding: 8px;
+  }
+} */
+
+/* footer */
+footer {
+  width: 100%;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  background-color: rebeccapurple;
+  color: white;
+  font-size: 1.2rem;
+}
+.fa-brands {
+  color: white;
+}
+.social-icons {
+  display: flex;
+  gap: 0.5rem;
+}

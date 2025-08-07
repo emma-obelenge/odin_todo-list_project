@@ -1,157 +1,198 @@
-import "./styles/renderTodoList.css";
-import createDiv from "./createDiv";
+// import "./styles/renderTodoList.css";
+import newElement from "./newElement";
+import { getTodoList } from "./todolistStorageActions";
+import updateTaskStyles from "./updateTaskStyles";
 
-// Helper function to update task styles and button states
-function updateTaskStyles({ completed }, taskTitle, editBtn, deleteBtn) {
-  if (completed) {
-    taskTitle.style.textDecoration = "line-through";
-    taskTitle.style.color = "#888";
-    editBtn.disabled = true;
-    deleteBtn.disabled = true;
-    editBtn.style.pointerEvents = "none";
-    deleteBtn.style.pointerEvents = "none";
-    editBtn.style.opacity = "0.5";
-    deleteBtn.style.opacity = "0.5";
+const renderSidebarCategories = (todoList) => {
+  // Function to render sidebar categories and update counts and list items
+
+  let pastTask = 0;
+  let todayTask = 0;
+  let upcomingTask = 0;
+
+  const pastTaskCount = document.querySelector(".past-task-count");
+  const todayTaskCount = document.querySelector(".today-task-count");
+  const upcomingTaskCount = document.querySelector(".upcoming-task-count");
+
+  let availableCategories = [{ name: "all", count: todoList.length }];
+
+  // update sidebar items and count
+  todoList.forEach((todo) => {
+    if (
+      todo.taskCategory &&
+      !availableCategories.some((cat) => cat.name === todo.taskCategory)
+    ) {
+      availableCategories.push({
+        name: todo.taskCategory,
+        count: 0,
+      });
+    }
+    if (todo.taskCategory) {
+      availableCategories.find((cat) => cat.name === todo.taskCategory).count++;
+    }
+
+    if (todo.taskDueDate && testDate(todo.taskDueDate) == "past") {
+      pastTask++;
+    } else if (todo.taskDueDate && testDate(todo.taskDueDate) == "today") {
+      todayTask++;
+    } else if (todo.taskDueDate && testDate(todo.taskDueDate) == "upcoming") {
+      upcomingTask++;
+    }
+  });
+
+  // wiping all sidebar category Data on the DOM
+  const sidebarCategories = document.querySelector(".list-categories");
+  sidebarCategories.innerHTML = "";
+
+  availableCategories.forEach((category) => {
+    if (category.name === "all" && category.count === 0) return;
+
+    if (category.name === "all") {
+      const allTaskCount = document.querySelector(".all-tasks-count");
+      if (allTaskCount) {
+        allTaskCount.textContent = category.count;
+      }
+    } else {
+      const categoryElement = newElement("li", "category");
+      categoryElement.innerHTML = `<span class="dot ${category.name.toLowerCase()}"></span>
+    <span class="category-name">${category.name}</span> <span class="count">${
+        category.count
+      }</span>`;
+
+      sidebarCategories.appendChild(categoryElement);
+    }
+  });
+  todayTaskCount.textContent = todayTask;
+  upcomingTaskCount.textContent = upcomingTask;
+  pastTaskCount.textContent = pastTask;
+};
+
+const testDate = (sampleDate) => {
+  const today = new Date();
+  const testDate = new Date(sampleDate);
+  if (
+    testDate.getFullYear() === today.getFullYear() &&
+    testDate.getMonth() === today.getMonth() &&
+    testDate.getDate() === today.getDate()
+  ) {
+    return "today";
+  } else if (testDate > today) {
+    return "upcoming";
   } else {
-    editBtn.disabled = false;
-    deleteBtn.disabled = false;
-    editBtn.style.pointerEvents = "auto";
-    deleteBtn.style.pointerEvents = "auto";
-    editBtn.style.opacity = "1";
-    deleteBtn.style.opacity = "1";
-    taskTitle.style.textDecoration = "none";
-    taskTitle.style.color = "";
+    return "past";
   }
-}
+};
 
-// Function to render the todo list in the DOM
-function renderTodoList() {
-  let todoList = JSON.parse(localStorage.getItem("todoList"));
+const renderMainContent = (todoList, mode) => {
+  // Function to render the main content of the todo list based on the selected mode/category filter
 
-  const listContainer = document.querySelector(".todo-list");
+  const listContainer = document.querySelector(".task-list");
+  const mainContentTitle = document.querySelector(".main-content-title");
+
+  if (mode == "all tasks") {
+    mode = "default";
+  }
+  if (mode != "default") {
+    let title = mode.charAt(0).toUpperCase() + mode.slice(1);
+    mainContentTitle.textContent = title;
+
+    // Apply filter based on specific category
+    if (mode === "upcoming") {
+      // Filter for upcoming tasks
+      todoList = todoList
+        .filter((todo) => {
+          const dueDate = new Date(todo.taskDueDate);
+          return dueDate > new Date();
+        })
+        .sort((a, b) => {
+          return new Date(a.taskDueDate) - new Date(b.taskDueDate);
+        });
+    } else if (mode === "today") {
+      // Filter for today's tasks
+      todoList = todoList
+        .filter((todo) => {
+          const dueDate = new Date(todo.taskDueDate);
+          const today = new Date();
+          return (
+            dueDate.getFullYear() === today.getFullYear() &&
+            dueDate.getMonth() === today.getMonth() &&
+            dueDate.getDate() === today.getDate()
+          );
+        })
+        .sort((a, b) => {
+          return new Date(a.taskDueDate) - new Date(b.taskDueDate);
+        });
+    } else if (mode === "past") {
+      // Filter for past tasks
+      todoList = todoList
+        .filter((todo) => {
+          const dueDate = new Date(todo.taskDueDate);
+          const today = new Date();
+          return dueDate < today && !(dueDate.getDate() == today.getDate());
+        })
+        .sort((a, b) => {
+          return new Date(a.taskDueDate) - new Date(b.taskDueDate);
+        });
+    } else {
+      todoList = todoList
+        .filter((todo) => todo.taskCategory.toLowerCase() == mode)
+        .sort((a, b) => {
+          return new Date(a.taskDueDate) - new Date(b.taskDueDate);
+        });
+    }
+  } else {
+    mainContentTitle.textContent = "All Tasks";
+    todoList.sort((a, b) => {
+      return new Date(a.taskDueDate) - new Date(b.taskDueDate);
+    });
+  }
 
   if (!listContainer) return;
   listContainer.innerHTML = "";
 
-  todoList.forEach((todo, index) => {
-    const checkBox = document.createElement("input");
+  // Create elements for checkbox, title, date, category, arrow, and implement render
+  todoList.forEach((todo) => {
+    const checkBox = newElement("input", "checkbox");
     checkBox.type = "checkbox";
-    checkBox.className = "todo-checkbox";
-    checkBox.checked = todo.completed;
+    checkBox.checked = todo.taskCompleted;
+    checkBox.id = todo.id;
 
-    const taskTitle = document.createElement("span");
-    taskTitle.textContent = todo.description;
-    taskTitle.className = "todo-title";
+    const taskTitle = newElement("span", "task-title", todo.taskTitle);
 
-    const buttonContainer = createDiv();
-    buttonContainer.className = "task-buttons";
-    const editBtn = document.createElement("i");
-    editBtn.className = "fa-solid fa-pen-to-square";
+    const taskDateAndTagContainer = newElement("span", "dateAndTagContainer");
 
-    const deleteBtn = document.createElement("i");
-    deleteBtn.className = "fa-solid fa-trash";
+    const taskDate = newElement("span", "date", todo.taskDueDate);
 
-    buttonContainer.appendChild(editBtn);
-    buttonContainer.appendChild(deleteBtn);
+    const taskTag = newElement("span", "tag", todo.taskCategory);
 
-    const item = document.createElement("li");
-    item.className = "todo-item";
-    item.setAttribute("data-id", todo.id);
-    item.appendChild(checkBox);
-    item.appendChild(taskTitle);
-    item.appendChild(buttonContainer);
+    const arrow = newElement("span", "arrow");
+    arrow.innerHTML = "&#8250;"; // Right arrow symbol
 
-    // Apply styles based on completion
-    updateTaskStyles(todo, taskTitle, editBtn, deleteBtn);
+    // Create the list item and append all elements
+    const todoTask = newElement("li");
+    todoTask.id = todo.id;
 
-    // Checkbox event: toggle completed
-    checkBox.addEventListener("change", () => {
-      todoList[index].completed = checkBox.checked;
-      localStorage.setItem("todoList", JSON.stringify(todoList));
-      updateTaskStyles(todoList[index], taskTitle, editBtn, deleteBtn);
-    });
+    taskDateAndTagContainer.appendChild(taskDate);
+    taskDateAndTagContainer.appendChild(taskTag);
+    todoTask.appendChild(checkBox);
+    todoTask.appendChild(taskTitle);
+    todoTask.appendChild(taskDateAndTagContainer);
+    todoTask.appendChild(arrow);
 
-    // Delete event: remove from DOM and storage
-    deleteBtn.addEventListener("click", () => {
-      todoList.splice(index, 1);
-      localStorage.setItem("todoList", JSON.stringify(todoList));
-      item.remove();
-    });
+    listContainer.appendChild(todoTask);
 
-    // Edit event: call edit handler
-    editBtn.addEventListener("click", () => {
-      if (typeof handleEditTask === "function") {
-        handleEditTask(todo, index);
-      }
-    });
-
-    listContainer.appendChild(item);
+    checkBox.checked
+      ? (checkBox.parentElement.className = "completed")
+      : checkBox.parentElement.removeAttribute("class");
   });
+  updateTaskStyles();
+};
 
-  function handleEditTask(todo, index) {
-    const listContainer = document.querySelector(".todo-list");
-    const item = listContainer.querySelector(`[data-id="${todo.id}"]`);
-    if (!item) return;
+// Function to render the todo list to the DOM
+const renderTodoList = (mode = "default") => {
+  let todoList = getTodoList();
+  renderSidebarCategories(todoList);
+  renderMainContent(todoList, mode);
+};
 
-    const taskTitle = item.querySelector(".todo-title");
-    const editBtn = item.querySelector(".fa-pen-to-square");
-    const deleteBtn = item.querySelector(".fa-trash");
-
-    // Create input for editing
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = todo.description;
-    input.className = "edit-input";
-    taskTitle.replaceWith(input);
-
-    // Add a thick check icon for saving
-    let saveBtn = document.createElement("i");
-    saveBtn.className = "fa-solid fa-circle-check save-edit-btn";
-    saveBtn.title = "Save";
-    saveBtn.style.color = "green"; // Set the color to green
-
-    // Insert saveBtn before editBtn
-    editBtn.parentNode.insertBefore(saveBtn, editBtn);
-
-    // Disable buttons while editing
-    editBtn.disabled = true;
-    deleteBtn.disabled = true;
-    editBtn.style.pointerEvents = "none";
-    deleteBtn.style.pointerEvents = "none";
-    editBtn.style.opacity = "0.5";
-    deleteBtn.style.opacity = "0.5";
-
-    input.focus();
-
-    function saveEdit() {
-      const newValue = input.value.trim();
-      if (newValue) {
-        todo.description = newValue;
-        let todoList = JSON.parse(localStorage.getItem("todoList"));
-        todoList[index].description = newValue;
-        localStorage.setItem("todoList", JSON.stringify(todoList));
-        renderTodoList();
-      } else {
-        input.focus();
-      }
-    }
-
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        saveEdit();
-      } else if (e.key === "Escape") {
-        renderTodoList();
-      }
-    });
-
-    input.addEventListener("blur", saveEdit);
-
-    saveBtn.addEventListener("mousedown", (e) => {
-      // Prevent blur before click
-      e.preventDefault();
-      saveEdit();
-    });
-  }
-  window.handleEditTask = handleEditTask;
-}
 export default renderTodoList;

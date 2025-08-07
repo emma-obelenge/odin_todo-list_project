@@ -13,16 +13,166 @@
     <title>Odin ToDo List App</title>
   </head>
   <body>
-    <header>
+    <header class="header">
       <h1 class="logo">ToDo List App</h1>
+      <!-- Hamburger (menu) toggle button -->
+      <i class="menu-bar fa-solid fa-bars"></i>
     </header>
 
-    <div id="content">
-      <button class="new-task-btn">
-        <i class="fa-solid fa-plus"></i> New Task
-      </button>
+    <!-- HTML structure for the popup form -->
+    <div class="task-form-popup">
+      <h2>Add New Task</h2>
+      <form id="taskForm">
+        <label for="taskTitle">Task Title:</label>
+        <input type="text" id="taskTitle" name="taskTitle" placeholder="Enter your task title"><br><br>
 
-      <ul class="todo-list"></ul>
+        <label for="taskDescription">Task Description:</label>
+        <textarea id="taskDescription" name="taskDescription" rows= "5" cols="30" placeholder="Enter your task description here..."></textarea><br><br>
+
+        <label for="taskDueDate">Due Date:</label>
+        <input type="date" id="taskDueDate" name="taskDueDate"><br><br>
+
+        <label for="taskCategory">Category:</label>
+        <input id="taskCategory" name="taskCategory" type="text">
+        <br><br>
+
+        <button class="newTaskSubmit" type="submit">Submit</button>
+        <button type="button" class="cancel">Cancel</button>
+        <span class="error-alert">Check Missing Field!</span>
+        <span class="success-alert">Task Added!</span>
+      </form>
+      
+    </div>
+    <div id="overlay"></div>
+
+    <div class="dashboard">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <form class="search-container">
+          <input type="search" placeholder="Search coming soon..." />
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </form>
+
+        <div class="sidebar-title">TASKS</div>
+        <ul class="task-categories">
+          <li class="category"><span class="category-name">Past</span>
+            <span class="count past-task-count"></span>
+          </li>
+          <li class="category"><span class="category-name">Today</span>
+            <span class="count today-task-count"></span>
+          </li>
+          <li class="category"> <span class="category-name">Upcoming</span>
+            <span class="count upcoming-task-count"></span>
+          </li>
+          <li class="active category"><span class="category-name">All Tasks</span>
+            <span class="count all-tasks-count"></span>
+          </li>
+          <li class="new-task-btn">
+            <i class="fa-solid fa-plus"></i> New Task
+          </li>
+        </ul>
+
+        <div class="sidebar-title">LISTS</div>
+        <ul class="list-categories">
+          <li class="category">
+            <span class="dot personal"></span>
+            <span class="category-name">Personal</span>
+            <span class="count">3</span>
+          </li>
+          <li class="category">
+            <span class="dot work"></span> <span class="category-name">Work</span>
+            <span class="count">5</span>
+          </li>
+          <li class="category">
+            <span class="dot list1"></span> <span class="category-name">List 1</span>
+            <span class="count">5</span>
+          </li>
+          <li class="new-list-btn">
+            <i class="fa-solid fa-plus"></i> Add New List
+          </li>
+        </ul>
+
+        <div class="account">
+          <ul>
+            <li class="settings"><i class="fa-solid fa-gear"></i> Settings</li>
+            <li class="sign-out"><i class="fa-solid fa-right-from-bracket"></i> Sign out</li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main">
+        <div class="main-header">
+          <h1 class="main-content-title">Today</h1>
+        </div>
+        <button class="add-task-btn">&plus; Add New Task</button>
+        <ul class="task-list">
+          <li>
+            <input type="checkbox" class="checkbox" />
+            <span class="task-title">Research content ideas</span>
+            <span class="arrow">&#8250;</span>
+          </li>
+          <li>
+            <input type="checkbox" class="checkbox" />
+            <span class="task-title">Create a database of guest authors</span>
+            <span class="arrow">&#8250;</span>
+          </li>
+          <li>
+            <input type="checkbox" class="checkbox" />
+            <span class="task-title">Renew driver's license</span>
+            <span class="task-meta">
+              <span class="date">23-03-22</span>
+              <span class="tag">Personal</span>
+            </span>
+            <span class="arrow">&#8250;</span>
+          </li>
+          <li>
+            <input type="checkbox" class="checkbox" />
+            <span class="task-title">Consult accountant</span>
+            <span class="task-meta"> </span>
+            <span class="arrow">&#8250;</span>
+          </li>
+          <li>
+            <input type="checkbox" class="checkbox" />
+            <span class="task-title">Print business card</span>
+            <span class="arrow">&#8250;</span>
+          </li>
+      </main>
+
+      <!-- Rightbar -->
+      <aside class="rightbar-container">
+        <div class="ads-container"></div>
+        <div class="rightbar">
+          <h2>Edit Task:</h2>
+                  <i class="fa-solid fa-xmark rightbar-close-btn"></i>
+          <div>
+            <label for="task-title">Title:</label>
+            <input class="rightbar-task-title description"></input>
+          </div>
+          <label>List:</label>
+          <select class="rightbar-task-category-list">
+            <option>Personal</option>
+            <option>Work</option>
+          </select>
+          <label>Due date:</label>
+          <input type="date" value="2025-05-11" class="rightbar-task-date"/>
+
+          <label for="task-description" class="description">Description:</label>
+          <textarea
+            id="task-description"
+            class="rightbar-task-description"
+            rows="5"
+            cols="30"
+            maxlength="500"
+            placeholder="Enter task description..."
+          ></textarea>
+
+          <div class="actions">
+            <button class="rightbar-delete-btn">Delete Task</button>
+            <button class="rightbar-save-btn">Save changes</button>
+          </div>
+        </div>
+      </aside>
     </div>
 
     <footer>

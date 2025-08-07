@@ -2,10 +2,10 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: './src/index.js',
+  entry: "./src/index.js",
   output: {
-    filename: 'main.js',
-    path: __dirname + '/dist',
+    filename: "main.js",
+    path: __dirname + "/dist",
     clean: true,
   },
   plugins: [
@@ -18,6 +18,10 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav)$/i,
+        type: "asset/resource",
       },
     ],
   },
